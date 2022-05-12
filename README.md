@@ -8,6 +8,6 @@ Python script that performs an airdrop of LKMEX to NFT holders
 
 ## CLI
 
-In a terminal the command should be look like :
+In a terminal the command should look like :
 
 ```python3 LKMEXSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
