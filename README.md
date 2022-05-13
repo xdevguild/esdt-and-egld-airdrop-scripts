@@ -5,7 +5,7 @@ There are two different scripts :
 <ol>
   <li>"LKMEXSender_SameForEveryHolder.py" performs an equal airdrop for all addresses, not accounting for the number of NFTs hold.
 </li>
-  <li>"LKMEXSender_WeightedByNFTHold.py" performs an airdrop weighted by the NFT hold for each address</li>
+  <li>"LKMEXSender_WeightedByNFTHold.py" performs an airdrop weighted by the quantity of NFTs hold for each address. More NFTs means higher airdrop. </li>
 </ol>
 
 
