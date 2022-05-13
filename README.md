@@ -26,4 +26,4 @@ The CSV file should have two columns: "Address" and "Count" (for the number of N
 
 ## Improvements
 
-Note that there is a somewhat not accurate filter for smart contract addresses (supposedly filtering out marketplaces), by checking if the address has a minimum of 5 "q". However if you have an accurate list of marketplaces addresses, or for whatever reasons some of the holders have many "q" in the address you might need to update the code. So far the current version has always worked.
+Note that there is a somewhat not accurate filter for smart contract addresses (supposedly filtering out marketplaces), by checking if the address has a minimum of 6 "q". However if you have an accurate list of marketplaces addresses, or for whatever reasons some of the holders have many "q" in the address you might need to update the code. So far the current version has always worked.
