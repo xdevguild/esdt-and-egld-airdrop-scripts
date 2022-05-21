@@ -1,4 +1,4 @@
-# ELROND-LKMEX-AIRDROP
+# LKMEX-AIRDROP
 Python script that performs an airdrop of LKMEX to NFT holders. 
 
 There are two different scripts : 
