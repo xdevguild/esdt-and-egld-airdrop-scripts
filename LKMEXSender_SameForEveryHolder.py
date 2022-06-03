@@ -19,6 +19,7 @@ parser.add_argument("--filename", help="CSV file with two cols : Address and Cou
 parser.add_argument("--amount_airdrop", help="The total amount of LKMEX ot be airdropped", required=True)
 parser.add_argument("--id", help="The collection id of the LKMEX (The last 6 alphanumericals)", required=True)
 parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the LKMEX)", required=True)
+parser.add_argument("--weighted", help="Flag (true for an airdrop weighted by the quantity of NFTs hold for each address)", required=False, default=False)
 
 args = parser.parse_args()
 
@@ -30,7 +31,11 @@ eligible_holders = data_df[data_df.Address.apply(lambda x: "qqqqqq" not in x)]
 
 # Compute the total of LKMEX per address (not taking into account the number of NFT hold)
 # TMP FIX : Remove 0.1 LKMEX per holder to avoid "insufficient founds" (due to Python's loss of precision)
-airdrop_per_holder = float(args.amount_airdrop) / ( eligible_holders.shape[0]) - 0.1  
+airdrop_per_holder = float(args.amount_airdrop) / ( eligible_holders.shape[0]) - 0.1
+
+if args.weighted : 
+    airdrop_per_NFT = float(args.amount_airdrop) / ( eligible_holders.Count.sum() ) - 0.1  
+    eligible_holders["Airdrop"] = airdrop_per_NFT*data_df.Count
 
 
 # ---------------------------------------------------------------- #
@@ -113,9 +118,10 @@ owner.sync_nonce(proxy)
 for _, row in eligible_holders.iterrows():
 
     address = row["Address"]  
+    quantity = row["Airdrop"] if args.weighted else airdrop_per_holder
     
     try :
-        sendLKMEX(owner, Account(address), airdrop_per_holder)
+        sendLKMEX(owner, Account(address), quantity)
     except :
         # Keep those addresses aside for debugging, and re-sending after 
         print(address)
