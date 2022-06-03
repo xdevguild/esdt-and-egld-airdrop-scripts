@@ -26,7 +26,7 @@ or
 ```python3 ESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
 
 
-The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). 
+The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). <br>
 An additionnal argument can be used `--weighted`. If set to true, the amount of tokens airdropped is function of the NFTs hold for each address. If
 set to false (default), then the amount is the same for every address. <br>
 
