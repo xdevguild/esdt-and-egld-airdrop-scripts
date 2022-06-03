@@ -1,11 +1,11 @@
-# LKMEX-AIRDROP
+# ESDT and LKMEX AIRDROP
 Python script that performs an airdrop of LKMEX to NFT holders. 
 
 There are two different scripts : 
 <ol>
-  <li>"LKMEXSender_SameForEveryHolder.py" performs an equal airdrop for all addresses, not accounting for the number of NFTs hold.
+  <li>"LKMEXSender.py" performs an airdrop of LKMEX tokens
 </li>
-  <li>"LKMEXSender_WeightedByNFTHold.py" performs an airdrop weighted by the quantity of NFTs hold for each address. More NFTs means higher airdrop. </li>
+  <li>"ESDTSender.py" performs an airdrop classical ESDT tokens </li>
 </ol>
 
 
@@ -19,9 +19,18 @@ Both libraries versions are in the requirements file, and they can be installed 
 
 In a terminal the command should look like :
 
-```python3 LKMEXSender_WeightedByNFTHold.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
+```python3 LKMEXSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
+
+or 
+
+```python3 ESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
+
 
 The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). 
+An additionnal argument can be used `--weighted`. If set to true, the amount of tokens airdropped is function of the NFTs hold for each address. If
+set to false (default), then the amount is the same for every address. <br>
+
+Note also that there is argument `--decimals` that is default to 18 for classical ESDT tokens, but can be changed if this is not the case.
 
 
 ## Improvements
