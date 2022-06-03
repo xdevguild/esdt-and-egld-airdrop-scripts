@@ -23,7 +23,7 @@ In a terminal the command should look like :
 
 or 
 
-```python3 ESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_LKMEX_QUANTITY --id LKMEX_ID --pem PATH_TO.pem```
+```python3 ESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amount_airdrop TOTAL_ESDT_QUANTITY --id ESDT_ID --pem PATH_TO.pem```
 
 
 The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). <br>
