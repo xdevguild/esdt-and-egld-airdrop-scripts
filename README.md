@@ -35,4 +35,4 @@ Note also that there is argument `--decimals` that is default to 18 for classica
 
 ## Improvements
 
-Note that there is a somewhat not accurate filter for smart contract addresses (supposedly filtering out marketplaces), by checking if the address has a minimum of 6 "q". However if you have an accurate list of marketplaces addresses, or for whatever reasons some of the holders have many "q" in the address you might need to update the code. So far the current version has always worked.
+There is a somewhat not accurate filter for smart contract addresses (supposedly filtering out marketplaces), by checking if the address has a minimum of 6 "q". However if you have an accurate list of marketplaces addresses, or for whatever reasons some of the holders have many "q" in the address you might need to update the code. So far the current version has always worked.
