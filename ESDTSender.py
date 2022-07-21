@@ -31,8 +31,8 @@ data_df = pd.read_csv(args.filename)
 # If not done already, remove SC addresses
 eligible_holders = data_df[data_df.Address.apply(lambda x: "qqqqqq" not in x)]
 
-# Compute the total of LKMEX per address (not taking into account the number of NFT hold)
-# TMP FIX : Remove 0.1 LKMEX per holder to avoid "insufficient founds" (due to Python's loss of precision)
+# Compute the total of token per address (not taking into account the number of NFT hold)
+# TMP FIX : Remove 0.0001 token per holder to avoid "insufficient funds" (due to Python's loss of precision)
 airdrop_per_holder = float(args.amount_airdrop) / ( eligible_holders.shape[0]) - 0.0001  
 
 # Compute the weighted airdrop if set to true as an argument
