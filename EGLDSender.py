@@ -17,6 +17,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 parser = argparse.ArgumentParser()
 parser.add_argument("--filename", help="CSV file with two cols : Address and Count", required=True)
 parser.add_argument("--amount_airdrop", help="The total amount of EGLD to be airdropped", required=True)
+parser.add_argument("--data", help="Message to send", nargs='+', type=str, default=[])
 parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the EGLD)", required=True)
 parser.add_argument("--weighted",
                     help="Flag (true for an airdrop weighted by the quantity of NFTs hold for each address.)",
@@ -39,6 +40,8 @@ if args.weighted:
     airdrop_per_NFT = float(args.amount_airdrop) / (eligible_holders.Count.sum()) - 0.0001
     eligible_holders["Airdrop"] = airdrop_per_NFT * data_df.Count
 
+# Get the data message
+data = " ".join([str(item) for item in args.data])
 
 # ---------------------------------------------------------------- #
 #                   MAIN EGLD FUNCTION
@@ -53,7 +56,7 @@ def sendEGLD(owner, owner_on_network, receiver, amount, signer):
         sender=owner,
         receiver=receiver,
         payment=payment,
-        data="ElrondBuddies monthly distribution",
+        data=data,
         nonce=owner_on_network.nonce
     )
     tx = builder.build()
