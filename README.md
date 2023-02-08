@@ -3,7 +3,7 @@ Python scripts that performs an airdrop of classical ESDT tokens or EGLD to NFT 
 
 There are two different scripts : 
 <ol>
-  <li>"ESDTSender.py" performs an airdrop of EGLD tokens </li>
+  <li>"EGLDSender.py" performs an airdrop of EGLD tokens </li>
   <li>"ESDTSender.py" performs an airdrop of ESDT tokens </li>
   <li>"multipleEGLDSender.py" performs an airdrop of multiple ESDT tokens </li>
 </ol>
