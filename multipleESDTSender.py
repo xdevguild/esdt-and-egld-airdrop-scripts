@@ -20,8 +20,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--filename", help="CSV file with two cols : Address and Count", required=True)
 parser.add_argument("--ids", help="List of token id of the ESDTs", nargs='+', required=True)
 parser.add_argument('--amounts_airdrop', help="List of respective amount to send", nargs='+', type=int, required=True)
-parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the LKMEX)", required=True)
-parser.add_argument("--decimals", help="The number of decimals (default 18)", required=False, default=18)
+parser.add_argument('--decimals', help="List of respective decimals (default 18)", nargs='+', type=int, default=[])
+parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the ESDT)", required=True)
 parser.add_argument("--weighted",
                     help="Flag (true for an airdrop weighted by the quantity of NFTs hold for each address.)",
                     required=False, default=False)
@@ -43,31 +43,33 @@ for amount_airdrop in args.amounts_airdrop:
 
 # Compute the weighted airdrop if set to true as an argument
 if args.weighted:
-    i = 1
-    for amount_airdrop in args.amounts_airdrop:
+    for index, amount_airdrop in enumerate(args.amounts_airdrop):
         airdrop_per_NFT = float(amount_airdrop) / (eligible_holders.Count.sum()) - 0.0001
-        eligible_holders["Airdrop_" + str(i)] = airdrop_per_NFT * data_df.Count
-        i += 1
+        eligible_holders["Airdrop_" + str(index)] = airdrop_per_NFT * data_df.Count
 
 # ---------------------------------------------------------------- #
 #                         CONSTANTS
 # ---------------------------------------------------------------- #
-TOKEN_DECIMALS = args.decimals  # default : 18
+TOKEN_DECIMALS = []
 TOKEN_IDs = []
-for id in args.ids:
+for index, id in enumerate(args.ids):
+    print(index, len(args.decimals))
+    if index < len(args.decimals):
+        TOKEN_DECIMALS.append(args.decimals[index])
+    else:
+        TOKEN_DECIMALS.append(18)  # default : 18
     TOKEN_IDs.append(id)
+    print(TOKEN_DECIMALS)
 
 
 # ---------------------------------------------------------------- #
-#                   MAIN ESDT FUNCTION
+#                   MAIN Multiple ESDT FUNCTION
 # ---------------------------------------------------------------- #
 def sendMultipleESDT(owner, owner_on_network, receiver, amounts, signer):
     payments = []
-    j = 1
-    for amount_to_send in amounts:
-        payment = TokenPayment.fungible_from_amount(TOKEN_IDs[j - 1], amount_to_send, TOKEN_DECIMALS)
+    for index, amount_to_send in enumerate(amounts):
+        payment = TokenPayment.fungible_from_amount(TOKEN_IDs[index], amount_to_send, TOKEN_DECIMALS[index])
         payments.append(payment)
-        j += 1
 
     config = DefaultTransactionBuildersConfiguration(chain_id="1")
 
@@ -105,12 +107,10 @@ owner_on_network = provider.get_account(owner)
 for _, row in eligible_holders.iterrows():
 
     address = Address.from_bech32(row["Address"])
-    k = 1
     quantities = []
-    for amount in args.amounts_airdrop:
-        quantity = row["Airdrop_" + str(k)] if args.weighted else airdrops_per_holder[k - 1]
+    for index, amount in enumerate(args.amounts_airdrop):
+        quantity = row["Airdrop_" + str(index)] if args.weighted else airdrops_per_holder[index]
         quantities.append(quantity)
-        k += 1
 
     try:
         sendMultipleESDT(owner, owner_on_network, address, quantities, signer)

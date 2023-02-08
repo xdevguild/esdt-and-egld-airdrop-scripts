@@ -1,9 +1,9 @@
-# ESDT and LKMEX AIRDROP
+# ESDT and EGLD AIRDROP
 Python scripts that performs an airdrop of classical ESDT tokens or EGLD to NFT holders. 
 
 There are two different scripts : 
 <ol>
-  <li>"ESDTSender.py" performs an airdrop of EGLD tokens /li>
+  <li>"ESDTSender.py" performs an airdrop of EGLD tokens </li>
   <li>"ESDTSender.py" performs an airdrop of ESDT tokens </li>
   <li>"multipleEGLDSender.py" performs an airdrop of multiple ESDT tokens </li>
 </ol>
@@ -17,6 +17,7 @@ There are two different scripts :
 Pandas as well.  <br>  <br>
 All libraries versions are in the requirements file, and they can be installed with pip. However I would recommend visiting MultiversX's doc on Erdpy in order to be sure to install all necessary libraries.
 
+You need also need a [walletKey.pem](https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/#__docusaurus/)
 
 ## Devnet
 
@@ -40,10 +41,10 @@ or
 
 or 
 
-```python3 multipleESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amounts_airdrop ESDT_QUANTITY_1 ESDT_QUANTITY_N --ids ESDT_ID_1 ESDT_ID_N --pem PATH_TO.pem```
+```python3 multipleESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amounts_airdrop ESDT_QUANTITY_1 ESDT_QUANTITY_N --ids ESDT_ID_1 ESDT_ID_N --decimals DECIMALS_1 DECIMALS_N --pem PATH_TO.pem```
 
 
-The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). <br>
+The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). You can use [multiversX-nft-holders](https://github.com/xdevguild/multiversX-nft-holders) to get the CSV file for NFT collections. <br>
 An additional argument can be used `--weighted`. If set to true, the amount of tokens airdropped is function of the NFTs hold for each address. If
 set to false (default), then the amount is the same for every address. <br>
 

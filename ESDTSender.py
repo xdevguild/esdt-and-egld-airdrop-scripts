@@ -17,8 +17,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--filename", help="CSV file with two cols : Address and Count", required=True)
 parser.add_argument("--amount_airdrop", help="The total amount of ESDT to be airdropped", required=True)
 parser.add_argument("--id", help="The token id of the ESDT", required=True)
-parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the ESDT)", required=True)
 parser.add_argument("--decimals", help="The number of decimals (default 18)", required=False, default=18)
+parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the ESDT)", required=True)
 parser.add_argument("--weighted",
                     help="Flag (true for an airdrop weighted by the quantity of NFTs hold for each address.)",
                     required=False, default=False)
