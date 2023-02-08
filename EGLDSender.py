@@ -1,6 +1,7 @@
 from multiversx_sdk_wallet import UserSigner, UserPEM
 from multiversx_sdk_core import Address, TokenPayment
-from multiversx_sdk_core.transaction_builders import ESDTTransferBuilder, DefaultTransactionBuildersConfiguration
+from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration
+from multiversx_sdk_core.transaction_builders import EGLDTransferBuilder
 from multiversx_sdk_network_providers import ProxyNetworkProvider
 
 from pathlib import Path
@@ -15,10 +16,8 @@ pd.options.mode.chained_assignment = None  # default='warn'
 # ---------------------------------------------------------------- #
 parser = argparse.ArgumentParser()
 parser.add_argument("--filename", help="CSV file with two cols : Address and Count", required=True)
-parser.add_argument("--amount_airdrop", help="The total amount of ESDT to be airdropped", required=True)
-parser.add_argument("--id", help="The token id of the ESDT", required=True)
-parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the ESDT)", required=True)
-parser.add_argument("--decimals", help="The number of decimals (default 18)", required=False, default=18)
+parser.add_argument("--amount_airdrop", help="The total amount of EGLD to be airdropped", required=True)
+parser.add_argument("--pem", help="The wallet that sends txs (needs to hold the EGLD)", required=True)
 parser.add_argument("--weighted",
                     help="Flag (true for an airdrop weighted by the quantity of NFTs hold for each address.)",
                     required=False, default=False)
@@ -42,24 +41,19 @@ if args.weighted:
 
 
 # ---------------------------------------------------------------- #
-#                         CONSTANTS
+#                   MAIN EGLD FUNCTION
 # ---------------------------------------------------------------- #
-TOKEN_DECIMALS = args.decimals  # default : 18
-TOKEN_ID = args.id
+def sendEGLD(owner, owner_on_network, receiver, amount, signer):
 
-
-# ---------------------------------------------------------------- #
-#                   MAIN ESDT FUNCTION
-# ---------------------------------------------------------------- #
-def sendESDT(owner, owner_on_network, receiver, amount, signer):
-    payment = TokenPayment.fungible_from_amount(TOKEN_ID, amount, TOKEN_DECIMALS)
+    payment = TokenPayment.egld_from_amount(amount)
     config = DefaultTransactionBuildersConfiguration(chain_id="1")
 
-    builder = ESDTTransferBuilder(
+    builder = EGLDTransferBuilder(
         config=config,
         sender=owner,
         receiver=receiver,
         payment=payment,
+        data="ElrondBuddies monthly distribution",
         nonce=owner_on_network.nonce
     )
     tx = builder.build()
@@ -74,8 +68,10 @@ def sendESDT(owner, owner_on_network, receiver, amount, signer):
 # ---------------------------------------------------------------- #
 #                  SETTING MAINNET PARAMS
 # ---------------------------------------------------------------- #
-# The signer of the tokens, that will send them
+# The signer of the EGLDs, that will send them
 signer = UserSigner.from_pem_file(Path(f"./{args.pem}"))
+
+# The wallet of the owner of the EGLDs
 pem = UserPEM.from_file(Path(f"./{args.pem}"))
 pubkey = bytes.fromhex(pem.public_key.hex())
 owner = Address(pubkey, "erd")
@@ -92,7 +88,7 @@ for _, row in eligible_holders.iterrows():
     quantity = row["Airdrop"] if args.weighted else airdrop_per_holder
 
     try:
-        sendESDT(owner, owner_on_network, address, quantity, signer)
+        sendEGLD(owner, owner_on_network, address, quantity, signer)
     except:
         # Keep those addresses aside for debugging, and re-sending after
         print(address)
