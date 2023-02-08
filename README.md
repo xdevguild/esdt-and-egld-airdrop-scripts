@@ -43,6 +43,7 @@ or
 
 ```python3 multipleESDTSender.py --filename LIST_OF_HOLDER_ADDRESSES.csv --amounts_airdrop ESDT_QUANTITY_1 ESDT_QUANTITY_N --ids ESDT_ID_1 ESDT_ID_N --decimals DECIMALS_1 DECIMALS_N --pem PATH_TO.pem```
 
+For the EGLDSender command you can use ```--data MESSAGE TO SEND``` if you want to attach a message to the transaction
 
 The CSV file should have two columns: "Address" and "Count" (for the number of NFTs hold). You can use [multiversX-nft-holders](https://github.com/xdevguild/multiversX-nft-holders) to get the CSV file for NFT collections. <br>
 An additional argument can be used `--weighted`. If set to true, the amount of tokens airdropped is function of the NFTs hold for each address. If
