@@ -15,7 +15,7 @@ There are two different scripts :
 [multiversx-sdk-wallet](https://pypi.org/project/multiversx-sdk-wallet/) needs to be installed.  <br>
 [multiversx-sdk-network-providers](https://pypi.org/project/multiversx-sdk-network-providers/) needs to be installed.  <br>
 Pandas as well.  <br>  <br>
-All libraries versions are in the requirements file, and they can be installed with pip. However I would recommend visiting MultiversX's doc on Erdpy in order to be sure to install all necessary libraries.
+All libraries versions are in the requirements file, and they can be installed with pip. 
 
 You need also need a [walletKey.pem](https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/#__docusaurus/)
 
