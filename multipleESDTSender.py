@@ -53,13 +53,11 @@ if args.weighted:
 TOKEN_DECIMALS = []
 TOKEN_IDs = []
 for index, id in enumerate(args.ids):
-    print(index, len(args.decimals))
     if index < len(args.decimals):
         TOKEN_DECIMALS.append(args.decimals[index])
     else:
         TOKEN_DECIMALS.append(18)  # default : 18
     TOKEN_IDs.append(id)
-    print(TOKEN_DECIMALS)
 
 
 # ---------------------------------------------------------------- #
