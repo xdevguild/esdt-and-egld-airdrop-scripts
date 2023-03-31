@@ -44,12 +44,26 @@ if args.weighted:
 data = " ".join([str(item) for item in args.data])
 
 # ---------------------------------------------------------------- #
+#                         CONSTANTS
+# ---------------------------------------------------------------- #
+
+config_network = {
+    "mainnet": {"chainID": "1", "proxy": ""},
+    "devnet": {"chainID": "D", "proxy": "devnet-"},
+    "testnet": {"chainID": "T", "proxy": "testnet-"}
+}
+
+CHAIN = "mainnet"
+CHAIN_ID = config_network[CHAIN]["chainID"]
+PROXY = config_network[CHAIN]["proxy"]
+
+# ---------------------------------------------------------------- #
 #                   MAIN EGLD FUNCTION
 # ---------------------------------------------------------------- #
 def sendEGLD(owner, owner_on_network, receiver, amount, signer):
 
     payment = TokenPayment.egld_from_amount(amount)
-    config = DefaultTransactionBuildersConfiguration(chain_id="1")
+    config = DefaultTransactionBuildersConfiguration(chain_id=CHAIN_ID)
 
     builder = EGLDTransferBuilder(
         config=config,
@@ -79,7 +93,7 @@ pem = UserPEM.from_file(Path(f"./{args.pem}"))
 pubkey = bytes.fromhex(pem.public_key.hex())
 owner = Address(pubkey, "erd")
 
-provider = ProxyNetworkProvider("https://gateway.multiversx.com")
+provider = ProxyNetworkProvider(f"https://{PROXY}gateway.multiversx.com")
 owner_on_network = provider.get_account(owner)
 
 # ---------------------------------------------------------------- #
