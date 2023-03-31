@@ -1,4 +1,4 @@
 pandas==1.4.1
-multiversx-sdk-core===0.3.3
-multiversx-sdk-wallet===0.4.2
-multiversx-sdk-network-providers===0.6.7
+multiversx-sdk-core===0.4.1
+multiversx-sdk-wallet===0.6.2
+multiversx-sdk-network-providers===0.6.9

@@ -8,6 +8,8 @@ from pathlib import Path
 
 import json
 import argparse
+import requests
+import sys
 
 import pandas as pd
 
@@ -50,9 +52,27 @@ if args.weighted:
 # ---------------------------------------------------------------- #
 #                         CONSTANTS
 # ---------------------------------------------------------------- #
+
+config_network = {
+    "mainnet": {"chainID": "1", "proxy": ""},
+    "devnet": {"chainID": "D", "proxy": "devnet-"},
+    "testnet": {"chainID": "T", "proxy": "testnet-"}
+}
+
+CHAIN = "mainnet"
+CHAIN_ID = config_network[CHAIN]["chainID"]
+PROXY = config_network[CHAIN]["proxy"]
+
 TOKEN_DECIMALS = []
 TOKEN_IDs = []
 for index, id in enumerate(args.ids):
+    try:
+        response = requests.get(f'https://{PROXY}api.multiversx.com/tokens?identifier={id}')
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print(f"ERROR: Token {id} does not exist")
+        sys.exit()
+
     if index < len(args.decimals):
         TOKEN_DECIMALS.append(args.decimals[index])
     else:
@@ -69,7 +89,7 @@ def sendMultipleESDT(owner, owner_on_network, receiver, amounts, signer):
         payment = TokenPayment.fungible_from_amount(TOKEN_IDs[index], amount_to_send, TOKEN_DECIMALS[index])
         payments.append(payment)
 
-    config = DefaultTransactionBuildersConfiguration(chain_id="1")
+    config = DefaultTransactionBuildersConfiguration(chain_id=CHAIN_ID)
 
     builder = MultiESDTNFTTransferBuilder(
         config=config,
@@ -96,7 +116,7 @@ pem = UserPEM.from_file(Path(f"./{args.pem}"))
 pubkey = bytes.fromhex(pem.public_key.hex())
 owner = Address(pubkey, "erd")
 
-provider = ProxyNetworkProvider("https://gateway.multiversx.com")
+provider = ProxyNetworkProvider(f"https://{PROXY}gateway.multiversx.com")
 owner_on_network = provider.get_account(owner)
 
 # ---------------------------------------------------------------- #
