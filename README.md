@@ -19,15 +19,12 @@ All libraries versions are in the requirements file, and they can be installed w
 
 You need also need a [walletKey.pem](https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/#__docusaurus/)
 
-## Devnet
+## Devnet & Tesnet
 
 In order to use the Devnet you need to: <br><br>
 Change this line: 
-```provider = ProxyNetworkProvider("https://gateway.multiversx.com")```
-and use this gateway: ```https://devnet-gateway.multiversx.com```
-
-Change this line: ```config = DefaultTransactionBuildersConfiguration(chain_id="1")```
-use ```chain_id="D"```
+```CHAIN = "mainnet"```
+and use this gateway: ```"devnet"``` or ```"testnet"```
 
 ## CLI
 
