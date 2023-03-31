@@ -6,6 +6,8 @@ from multiversx_sdk_network_providers import ProxyNetworkProvider
 from pathlib import Path
 
 import argparse
+import requests
+import sys
 
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -44,16 +46,33 @@ if args.weighted:
 # ---------------------------------------------------------------- #
 #                         CONSTANTS
 # ---------------------------------------------------------------- #
+
+config_network = {
+    "mainnet": {"chainID": "1", "proxy": ""},
+    "devnet": {"chainID": "D", "proxy": "devnet-"},
+    "testnet": {"chainID": "T", "proxy": "testnet-"}
+}
+
+CHAIN = "mainnet"
+CHAIN_ID = config_network[CHAIN]["chainID"]
+PROXY = config_network[CHAIN]["proxy"]
+
 TOKEN_DECIMALS = args.decimals  # default : 18
 TOKEN_ID = args.id
 
+try:
+    response = requests.get(f'https://{PROXY}api.multiversx.com/tokens?identifier={TOKEN_ID}')
+    response.raise_for_status()
+except requests.exceptions.HTTPError as e:
+    print("ERROR: Token does not exist")
+    sys.exit()
 
 # ---------------------------------------------------------------- #
 #                   MAIN ESDT FUNCTION
 # ---------------------------------------------------------------- #
 def sendESDT(owner, owner_on_network, receiver, amount, signer):
     payment = TokenPayment.fungible_from_amount(TOKEN_ID, amount, TOKEN_DECIMALS)
-    config = DefaultTransactionBuildersConfiguration(chain_id="1")
+    config = DefaultTransactionBuildersConfiguration(chain_id=CHAIN_ID)
 
     builder = ESDTTransferBuilder(
         config=config,
@@ -80,7 +99,7 @@ pem = UserPEM.from_file(Path(f"./{args.pem}"))
 pubkey = bytes.fromhex(pem.public_key.hex())
 owner = Address(pubkey, "erd")
 
-provider = ProxyNetworkProvider("https://gateway.multiversx.com")
+provider = ProxyNetworkProvider(f"https://{PROXY}gateway.multiversx.com")
 owner_on_network = provider.get_account(owner)
 
 # ---------------------------------------------------------------- #
