@@ -2,6 +2,7 @@ from multiversx_sdk_wallet import UserSigner, UserPEM
 from multiversx_sdk_core import Address, TokenPayment
 from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration, \
     MultiESDTNFTTransferBuilder
+from multiversx_sdk_cli.accounts import Account
 from multiversx_sdk_network_providers import ProxyNetworkProvider
 
 from pathlib import Path
@@ -65,18 +66,34 @@ PROXY = config_network[CHAIN]["proxy"]
 
 TOKEN_DECIMALS = []
 TOKEN_IDs = []
+
+wallet = Account(pem_file=Path(f"./{args.pem}")).address
+
 for index, id in enumerate(args.ids):
     try:
-        response = requests.get(f'https://{PROXY}api.multiversx.com/tokens?identifier={id}')
+        response = requests.get(f'https://{PROXY}api.multiversx.com/tokens/{id}')
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         print(f"ERROR: Token {id} does not exist")
         sys.exit()
 
-    if index < len(args.decimals):
-        TOKEN_DECIMALS.append(args.decimals[index])
-    else:
-        TOKEN_DECIMALS.append(18)  # default : 18
+    try:
+        response = requests.get(f'https://{PROXY}api.multiversx.com/accounts/{wallet}/tokens/{id}')
+        response.raise_for_status()
+
+        if index < len(args.decimals):
+            TOKEN_DECIMALS.append(args.decimals[index])
+        else:
+            TOKEN_DECIMALS.append(18)  # default : 18
+
+        balance = response.json()['balance']
+        amount_to_drop = float(args.amounts_airdrop[index]) * pow(10, int(TOKEN_DECIMALS[index]))
+        if float(balance) < amount_to_drop:
+            print(f"ERROR: You don't have enough {id}")
+            sys.exit()
+    except requests.exceptions.HTTPError as e:
+        print(f"ERROR: You don't own any {id}")
+        sys.exit()
     TOKEN_IDs.append(id)
 
 
