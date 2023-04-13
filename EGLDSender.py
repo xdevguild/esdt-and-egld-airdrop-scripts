@@ -3,10 +3,13 @@ from multiversx_sdk_core import Address, TokenPayment
 from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration
 from multiversx_sdk_core.transaction_builders import EGLDTransferBuilder
 from multiversx_sdk_network_providers import ProxyNetworkProvider
+from multiversx_sdk_cli.accounts import Account
 
 from pathlib import Path
 
+import requests
 import argparse
+import sys
 
 import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -56,6 +59,19 @@ config_network = {
 CHAIN = "mainnet"
 CHAIN_ID = config_network[CHAIN]["chainID"]
 PROXY = config_network[CHAIN]["proxy"]
+
+wallet = Account(pem_file=Path(f"./{args.pem}")).address
+
+try:
+    response = requests.get(f'https://{PROXY}api.multiversx.com/accounts/{wallet}')
+    response.raise_for_status()
+    balance = response.json()['balance']
+    if float(balance) < float(args.amount_airdrop) * pow(10, 18):
+        print(f"ERROR: You don't have enough EGLD")
+        sys.exit()
+except requests.exceptions.HTTPError as e:
+    print(f"ERROR: You don't own any EGLD")
+    sys.exit()
 
 # ---------------------------------------------------------------- #
 #                   MAIN EGLD FUNCTION
