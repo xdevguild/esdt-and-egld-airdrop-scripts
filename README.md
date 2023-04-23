@@ -19,7 +19,7 @@ All libraries versions are in the requirements file, and they can be installed w
 
 You need also need a [walletKey.pem](https://docs.multiversx.com/sdk-and-tools/sdk-py/deriving-the-wallet-pem-file/#__docusaurus/)
 
-## Devnet & Tesnet
+## Devnet & Testnet
 
 In order to use the Devnet you need to: <br><br>
 Change this line: 
