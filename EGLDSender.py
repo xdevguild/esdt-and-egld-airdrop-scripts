@@ -3,6 +3,7 @@ from multiversx_sdk_core import Address, TokenPayment
 from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration
 from multiversx_sdk_core.transaction_builders import EGLDTransferBuilder
 from multiversx_sdk_network_providers import ProxyNetworkProvider
+from alive_progress import alive_bar
 
 from pathlib import Path
 
@@ -116,13 +117,13 @@ except requests.exceptions.HTTPError as e:
 # ---------------------------------------------------------------- #
 #                     AIRDROP LOOP
 # ---------------------------------------------------------------- #
-for _, row in eligible_holders.iterrows():
-
-    address = Address.from_bech32(row["Address"])
-    quantity = row["Airdrop"] if args.weighted else airdrop_per_holder
-
-    try:
-        sendEGLD(owner, owner_on_network, address, quantity, signer)
-    except:
-        # Keep those addresses aside for debugging, and re-sending after
-        print(address)
+with alive_bar(len(eligible_holders), title='Sending EGLD') as bar:
+    for _, row in eligible_holders.iterrows():
+        address = Address.from_bech32(row["Address"])
+        quantity = row["Airdrop"] if args.weighted else airdrop_per_holder
+        try:
+            sendEGLD(owner, owner_on_network, address, quantity, signer)
+        except:
+            # Keep those addresses aside for debugging, and re-sending after
+            print(address)
+        bar()
