@@ -35,12 +35,12 @@ data_df = pd.read_csv(args.filename)
 eligible_holders = data_df[data_df.Address.apply(lambda x: "qqqqqq" not in x)]
 
 # Compute the total of token per address (not taking into account the number of NFT hold)
-# TMP FIX : Remove 0.0001 token per holder to avoid "insufficient funds" (due to Python's loss of precision)
-airdrop_per_holder = float(args.amount_airdrop) / (eligible_holders.shape[0]) - 0.0001
+# TMP FIX : Remove 0.0000001 token per holder to avoid "insufficient funds" (due to Python's loss of precision)
+airdrop_per_holder = float(args.amount_airdrop) / (eligible_holders.shape[0]) - 0.0000001
 
 # Compute the weighted airdrop if set to true as an argument
 if args.weighted:
-    airdrop_per_NFT = float(args.amount_airdrop) / (eligible_holders.Count.sum()) - 0.0001
+    airdrop_per_NFT = float(args.amount_airdrop) / (eligible_holders.Count.sum()) - 0.0000001
     eligible_holders["Airdrop"] = airdrop_per_NFT * data_df.Count
 
 # Get the data message
