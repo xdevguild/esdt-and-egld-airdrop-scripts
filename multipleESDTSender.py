@@ -3,6 +3,7 @@ from multiversx_sdk_core import Address, TokenPayment
 from multiversx_sdk_core.transaction_builders import DefaultTransactionBuildersConfiguration, \
     MultiESDTNFTTransferBuilder
 from multiversx_sdk_network_providers import ProxyNetworkProvider
+from alive_progress import alive_bar
 
 from pathlib import Path
 
@@ -139,16 +140,17 @@ for index, id in enumerate(args.ids):
 # ---------------------------------------------------------------- #
 #                     AIRDROP LOOP
 # ---------------------------------------------------------------- #
-for _, row in eligible_holders.iterrows():
+with alive_bar(len(eligible_holders), title=f'Sending ESDTs') as bar:
+    for _, row in eligible_holders.iterrows():
+        address = Address.from_bech32(row["Address"])
+        quantities = []
+        for index, amount in enumerate(args.amounts_airdrop):
+            quantity = row["Airdrop_" + str(index)] if args.weighted else airdrops_per_holder[index]
+            quantities.append(quantity)
 
-    address = Address.from_bech32(row["Address"])
-    quantities = []
-    for index, amount in enumerate(args.amounts_airdrop):
-        quantity = row["Airdrop_" + str(index)] if args.weighted else airdrops_per_holder[index]
-        quantities.append(quantity)
-
-    try:
-        sendMultipleESDT(owner, owner_on_network, address, quantities, signer)
-    except:
-        # Keep those addresses aside for debugging, and re-sending after
-        print(address)
+        try:
+            sendMultipleESDT(owner, owner_on_network, address, quantities, signer)
+        except:
+            # Keep those addresses aside for debugging, and re-sending after
+            print(address)
+        bar()
