@@ -2,4 +2,4 @@ pandas==1.4.1
 multiversx-sdk-core===0.4.1
 multiversx-sdk-wallet===0.6.2
 multiversx-sdk-network-providers===0.6.9
-alive_bar===3.1.4
+alive-progress===3.1.4
